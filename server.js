@@ -1,6 +1,4 @@
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import dns from 'dns';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -246,28 +244,12 @@ app.post('/api/upload', protect, admin, upload.single('image'), async (req, res)
   }
 });
 
-// -------------------------- DEPLOYMENT --------------------------
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the frontend dist folder
-  app.use(express.static(path.join(__dirname, './dist')));
-
-  // Handle SPA routing: serve index.html for all non-API routes
-  app.get('*', (req, res) => {
-    // If it's not an API route, serve index.html
-    if (!req.path.startsWith('/api')) {
-      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-    }
-  });
-} else {
-  app.get('/', (req, res) => {
-    res.send('API is running...');
-  });
-}
+// -------------------------- ROOT ROUTE --------------------------
+app.get('/', (req, res) => {
+  res.send('House of Stri API is running securely...');
+});
 // ----------------------------------------------------------------
 
 app.listen(port, () => {
-  console.log(`Backend server running on http://localhost:${port}`);
+  console.log(`Backend server running on port ${port}`);
 });
